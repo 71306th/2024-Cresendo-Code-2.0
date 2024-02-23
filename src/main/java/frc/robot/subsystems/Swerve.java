@@ -36,7 +36,7 @@ public class Swerve extends SubsystemBase {
 
   private PID adjustPID;
 
-  double autoAimRotateAngle = 0, visionYawTotal = 0, counter = 0, RotationVal=0, lastRotationVal=0;
+  double autoAimRotateAngle = 0, visionYawTotal = 0, counter = 1, RotationVal = 0, lastRotationVal = 0;
   int canCalculate = 0;
   double[] visionYawValue = new double[10];
 
@@ -132,15 +132,16 @@ public class Swerve extends SubsystemBase {
   }
 
   public double calculateAutoFacing() {
-    if((Variables.VisionControl.id == 4 || Variables.VisionControl.id == 7) && canCalculate == 9){
-      for(int i=0;i<10;i++){
-        if(visionYawValue[i] <= (visionYawTotal/(counter+1)) + 3){
+    if((Variables.VisionControl.id == 4 || Variables.VisionControl.id == 7) && canCalculate == 10){
+      visionYawTotal = visionYawValue[0];
+      for(int i=1;i<10;i++){
+        if(visionYawValue[i] <= ((visionYawTotal/counter) + 3) && visionYawValue[i] >= ((visionYawTotal/counter) - 3)){
           counter++;
           visionYawTotal += visionYawValue[i];
         }
       }
       autoAimRotateAngle = visionYawTotal/counter;
-      counter = 0;
+      counter = 1;
       RotationVal = MathUtility.clamp(
       adjustPID.calculate(autoAimRotateAngle), 
         Variables.DriverControl.slow ? -Math.pow(Constants.Swerve.slowRegulator, 2) : -Constants.Swerve.slowRegulator, 
@@ -152,13 +153,6 @@ public class Swerve extends SubsystemBase {
       RotationVal = lastRotationVal;
     }
     return -RotationVal;
-    // } else if (Variables.VisionControl.id == 3 || Variables.VisionControl.id == 8) {
-    //   double IDToSpeaker = Math.sqrt(Math.pow(Variables.VisionControl.RightIDToCenterY, 2) + Math.pow(Variables.VisionControl.CenterIDToSpeakerZ, 2)); // x
-    //   double BotToTag = Storage.VisionStorage.VisionPose.getZ() / Math.cos(Variables.VisionControl.CameraRoll) / Math.cos(Storage.VisionStorage.VisionYaw); // y
-    //   double AngleSpeakerTagBot = -Storage.VisionStorage.VisionYaw + 90; // theta
-    //   autoAimRotateAngle = Math.asin(IDToSpeaker * Math.sin(AngleSpeakerTagBot) / 
-    //   Math.sqrt(Math.pow(IDToSpeaker, 2) + Math.pow(BotToTag, 2) - 2 * IDToSpeaker * BotToTag * Math.cos(AngleSpeakerTagBot))); // law of sine and cosine mixed
-    // }
   }
 
   @Override
@@ -171,13 +165,13 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putBoolean("isSlow ", Variables.DriverControl.slow);
     SmartDashboard.putBoolean("isAuto", Variables.OperatorControl.isAuto);
 
-    for (SwerveModule mod : mSwerveMods) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Cancoder", mod.getAngle().getDegrees());
+    // for (SwerveModule mod : mSwerveMods) {
+    //   SmartDashboard.putNumber(
+    //       "Mod " + mod.moduleNumber + " Cancoder", mod.getAngle().getDegrees());
 
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-    }
+    //   SmartDashboard.putNumber(
+    //       "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+    // }
   }
 
   // SmartDashboard.putNumber("ROLL", getFrontRoll());

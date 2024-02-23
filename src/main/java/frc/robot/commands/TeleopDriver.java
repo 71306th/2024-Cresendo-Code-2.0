@@ -23,8 +23,6 @@ public class TeleopDriver extends Command {
 
   private boolean onePress1 = false;
   private boolean onePress2 = false;
-  private boolean onepressAuto = false;
-  private boolean onepressLED = false;
 
   private double translationVal;
   private double strafeVal;
@@ -90,30 +88,6 @@ public class TeleopDriver extends Command {
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
         rotationVal * Constants.Swerve.maxAngularVelocity, Variables.DriverControl.fieldOriented,
         true);
-
-    if(driver.getAButtonPressed() && onepressAuto == false) {
-      Variables.OperatorControl.isAuto = !Variables.OperatorControl.isAuto;
-      onepressAuto = true;
-    }
-    if(driver.getAButtonReleased()) onepressAuto = false;
-    if(driver.getXButtonPressed() && onepressLED == false) {
-      switch(Variables.DriverControl.LEDLight) {
-        case 0:
-          Variables.DriverControl.LEDLight++;
-          break;
-        case 1:
-          Variables.DriverControl.LEDLight++;
-          break;
-        case 2:
-          Variables.DriverControl.LEDLight++;
-          break;
-        case 3:
-          Variables.DriverControl.LEDLight = 0;
-          break;
-      }
-      onepressLED = true;
-    }
-    if(driver.getXButtonReleased()) onepressLED = false;
 
     //testing motors
     // if(driver.getPOV() == 0) s_Swerve.mSwerveMods[0].setDriveMotor(1);

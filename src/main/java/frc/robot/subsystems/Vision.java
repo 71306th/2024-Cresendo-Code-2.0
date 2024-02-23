@@ -62,6 +62,7 @@ public class Vision extends SubsystemBase {
 
     Variables.VisionControl.visionPose3d = new Pose3d(new Translation3d(coordinateArr[0], coordinateArr[1], coordinateArr[2]), new Rotation3d(coordinateArr[5], coordinateArr[3], coordinateArr[4]));
     Variables.VisionControl.visionYaw = x;
+    Variables.VisionControl.botToSpeakerDis = coordinateArr[2] / Math.cos(Constants.Vision.cameraRoll) / Math.cos(x);
 
     SmartDashboard.putNumber("LimelightVaild", valid);
     SmartDashboard.putNumber("LimelightX", x);
@@ -92,11 +93,5 @@ public class Vision extends SubsystemBase {
     Rotation3d rotation3d = camera3d.plus(Constants.Vision.cameraToBot.getRotation());
 
     return new Pose3d(translation3d, rotation3d);
-  }
-
-  /* settings */
-  public void setLEDMode(int command){
-    ledMode = command;
-    tled.set(ledMode);
   }
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.lib.config.SwerveModuleConstants;
 
 /**
@@ -31,10 +32,10 @@ public final class Constants {
 
   public static final class Swerve {
     public static final double axisDeadBand = 0.05; // make sure ur robot won't vibrate cuz the joystick gives a input like 0.002 or sth
-    public static final int pigeon1 = 5; // advanced gyro
-    public static final int pigeon2 = 6;
-    public static final int pigeon3 = 7;
-    public static final int pigeon4 = 8;
+    public static final int pigeon1 = 13; // advanced gyro
+    public static final int pigeon2 = 14;
+    public static final int pigeon3 = 15;
+    public static final int pigeon4 = 16;
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
@@ -100,9 +101,9 @@ public final class Constants {
     /* Module Specific Constants */
     /* Front Left Module - Module 0 */
     public static final class Mod0 {
-      public static final int driveMotorID = 11;
-      public static final int angleMotorID = 12;
-      public static final int canCoderID = 1;
+      public static final int driveMotorID = 1;
+      public static final int angleMotorID = 2;
+      public static final int canCoderID = 3;
       public static final Rotation2d angleOffset = Rotation2d.fromRotations(-0.302978);
 
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
@@ -111,9 +112,9 @@ public final class Constants {
 
     /* Front Right Module - Module 1 */
     public static final class Mod1 {
-      public static final int driveMotorID = 21;
-      public static final int angleMotorID = 22;
-      public static final int canCoderID = 2;
+      public static final int driveMotorID = 4;
+      public static final int angleMotorID = 5;
+      public static final int canCoderID = 6;
       public static final Rotation2d angleOffset = Rotation2d.fromRotations(-0.720458);
 
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
@@ -122,9 +123,9 @@ public final class Constants {
 
     /* Back Left Module - Module 2 */
     public static final class Mod2 {
-      public static final int driveMotorID = 31;
-      public static final int angleMotorID = 32;
-      public static final int canCoderID = 3;
+      public static final int driveMotorID = 7;
+      public static final int angleMotorID = 8;
+      public static final int canCoderID = 9;
       public static final Rotation2d angleOffset = Rotation2d.fromRotations(-0.969482);
 
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
@@ -133,9 +134,9 @@ public final class Constants {
     
     /* Back Right Module - Module 3 */
     public static final class Mod3 {
-      public static final int driveMotorID = 41;
-      public static final int angleMotorID = 42;
-      public static final int canCoderID = 4;
+      public static final int driveMotorID = 10;
+      public static final int angleMotorID = 11;
+      public static final int canCoderID = 12;
       public static final Rotation2d angleOffset = Rotation2d.fromRotations(-0.607666);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
           canCoderID, angleOffset);
@@ -152,18 +153,47 @@ public final class Constants {
 
   public static final class SuperStructure {
     /* Intake */
-    public static final int intakeLower1 = 1;
-    public static final int intakeLower2 = 2;
-    public static final int intakeUpper = 3;
-    public static final boolean intakeLower1Inverted = true;
-    public static final boolean intakeLower2Inverted = true;
+    public static final int intakeLowerMaster = 20;
+    public static final int intakeLowerSlave = 21;
+    public static final int intakeUpper = 22;
+    public static final boolean intakeLowerMasterInverted = true;
+    public static final boolean intakeLowerSlaveInverted = false;
     public static final boolean intakeUpperInverted = true;
+    public static final Color noteColorInShade = new Color(0.51, 0.157, 0.078);
+    public static final Color noteColorNoShade = new Color(1, 0.353, 0.176);
 
     /* Arm */
-    public static final int tilterMaster = 4;
-    public static final int tilterSlave = 5;
-    public static final int tilterEncoder = 6;
+    public static final int tilterMaster = 17;
+    public static final int tilterSlave = 18;
+    public static final int tilterEncoder = 19;
+    public static final int tilterLimitSwitch = 1;
     public static final boolean tilterMasterInverted = true;
     public static final boolean tilterSlaveInverted = true;
+
+    /* Reserved Value */
+    // Auto
+    public static final double tilterAutoMaxSpeed = 0.3;
+    public static final double intakeAutoMaxSpeed = 0.6;
+    public static final double intakeAutoMinSpeed = 0.4;
+
+    // Base
+    public static final double tilterBaseAngle = 0;
+    public static final double intakeBaseSpeed = 0;
+
+    // Podium
+    public static final double tilterPodiumAngle = 0;
+    public static final double intakePodiumSpeed = 0;
+
+    // Floor
+    public static final double tilterFloorAngle = 0;
+    public static final double intakeClaimSpeed = 0.3;
+
+    // Amplifier
+    public static final double tilterAmpAngle = 0;
+    public static final double intakeAmpSpeed = 0;
+
+    // Idle
+    public static final double tilterIdleAngle = 0;
+    public static final double intakeIdleSpeed = 0;
   }
 }

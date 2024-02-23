@@ -14,9 +14,6 @@ public class Variables {
 
     /* Slow Mode */
     public static boolean slow = false;
-
-    /* LED Lights */
-    public static int LEDLight = 0;
   }
 
   public static final class OperatorControl {
@@ -30,16 +27,19 @@ public class Variables {
 
     /* Stop & Stabilizing */
     public static double tilterLockedAngle = 0.0;
-    public static boolean tilterIsLocked = false;
+    public static boolean tilterManualIsLocked = false;
   }
 
   public static final class VisionControl {
     /* ID */
     public static double id = -1;
 
+    /* LED Lights */
+    public static int LEDLight = 0;
+
     /* Apriltag Location */
     public static double visionYaw;
     public static Pose3d visionPose3d;
-    public static double tilterToSpeakerDis;
+    public static double botToSpeakerDis;
   }
 }
