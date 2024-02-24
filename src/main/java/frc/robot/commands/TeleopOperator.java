@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -23,6 +25,11 @@ public class TeleopOperator extends Command {
   private boolean onePressTilterMinus = false;
   private boolean onePressIntakePlus = false;
   private boolean onePressIntakeMinus = false;
+  private boolean oneTimeIsInPlace = false;
+  private boolean oneTimeIsLoaded = false;
+
+  private double leftRumbleTime;
+  private double rightRumbleTime;
 
   public TeleopOperator(SuperStructure m_SuperStructure2, Controller subsystem2) {
     m_SuperStructure = m_SuperStructure2;
@@ -67,5 +74,27 @@ public class TeleopOperator extends Command {
     }
     if(operator.getPOV() != 90) onePressIntakeMinus = false;
     if(operator.getPOV() != 270) onePressIntakePlus = false;
+
+    if(m_SuperStructure.isLoaded()){
+      if(!oneTimeIsLoaded) {
+        rightRumbleTime = Timer.getFPGATimestamp() + 1; 
+        oneTimeIsLoaded = true;
+      }
+      if(rightRumbleTime >= Timer.getFPGATimestamp()) operator.setRumble(RumbleType.kRightRumble, 1);
+      else {
+        operator.setRumble(RumbleType.kBothRumble, 0); 
+        oneTimeIsLoaded = false;
+      }
+    } else if (Variables.OperatorControl.isInPlace) {
+      if(!oneTimeIsInPlace) {
+        leftRumbleTime = Timer.getFPGATimestamp() + 1; 
+        oneTimeIsInPlace = true;
+      }
+      if(leftRumbleTime >= Timer.getFPGATimestamp()) operator.setRumble(RumbleType.kLeftRumble, 1);
+      else {
+        operator.setRumble(RumbleType.kBothRumble, 0); 
+        oneTimeIsInPlace = false;
+      }
+    }
   }
 }

@@ -132,7 +132,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public double calculateAutoFacing() {
-    if((Variables.VisionControl.id == 4 || Variables.VisionControl.id == 7) && canCalculate == 10){
+    if(Variables.VisionControl.hasTarget && canCalculate == 10){
       visionYawTotal = visionYawValue[0];
       for(int i=1;i<10;i++){
         if(visionYawValue[i] <= ((visionYawTotal/counter) + 3) && visionYawValue[i] >= ((visionYawTotal/counter) - 3)){
@@ -147,7 +147,7 @@ public class Swerve extends SubsystemBase {
         Variables.DriverControl.slow ? -Math.pow(Constants.Swerve.slowRegulator, 2) : -Constants.Swerve.slowRegulator, 
         Variables.DriverControl.slow ? Math.pow(Constants.Swerve.slowRegulator, 2) : Constants.Swerve.slowRegulator);
       lastRotationVal = RotationVal;
-    }else if(Variables.VisionControl.id == 4 || Variables.VisionControl.id == 7){
+    }else if(Variables.VisionControl.hasTarget){
       visionYawValue[canCalculate] = Variables.VisionControl.visionYaw;
       canCalculate++;
       RotationVal = lastRotationVal;

@@ -3,7 +3,9 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Variables;
@@ -23,16 +25,21 @@ public class TeleopDriver extends Command {
 
   private boolean onePress1 = false;
   private boolean onePress2 = false;
+  private boolean oneTime1 = false;
+  private boolean oneTime2 = false;
 
   private double translationVal;
   private double strafeVal;
   private double rotationVal;
+  private double leftRumbleTime;
+  private double rightRumbleTime;
 
   public TeleopDriver(Swerve s_Swerve, Controller s_Controller) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
     m_controller = s_Controller;
     driver = m_controller.getDriverController();
+    driver.setRumble(RumbleType.kBothRumble, 0);
   }
 
   @Override
@@ -45,7 +52,7 @@ public class TeleopDriver extends Command {
       strafeVal =
           strafeLimiter.calculate(
               MathUtil.applyDeadband(driver.getLeftX() * Constants.Swerve.slowRegulator, Constants.Swerve.axisDeadBand));
-      if(Variables.OperatorControl.isAuto && (Variables.VisionControl.id == 4 || Variables.VisionControl.id == 7)) {
+      if(Variables.VisionControl.hasTarget) {
           rotationVal = s_Swerve.calculateAutoFacing();
       } else {
           rotationVal =
@@ -59,7 +66,7 @@ public class TeleopDriver extends Command {
       strafeVal =
           strafeLimiter.calculate(
               MathUtil.applyDeadband(driver.getLeftX(), Constants.Swerve.axisDeadBand));
-      if(Variables.OperatorControl.isAuto && (Variables.VisionControl.id == 4 || Variables.VisionControl.id == 7)){
+      if(Variables.VisionControl.hasTarget){
           rotationVal = s_Swerve.calculateAutoFacing();
       } else {
           rotationVal =
@@ -89,7 +96,31 @@ public class TeleopDriver extends Command {
         rotationVal * Constants.Swerve.maxAngularVelocity, Variables.DriverControl.fieldOriented,
         true);
 
-    //testing motors
+    if(Variables.VisionControl.hasTarget){
+      if(!oneTime1) {
+        rightRumbleTime = Timer.getFPGATimestamp() + 1; 
+        oneTime1 = true;
+      }
+      if(rightRumbleTime >= Timer.getFPGATimestamp()) driver.setRumble(RumbleType.kRightRumble, 1);
+      else {
+        driver.setRumble(RumbleType.kBothRumble, 0); 
+        oneTime1 = false;
+      }
+    } else {
+      if(!oneTime2) {
+        leftRumbleTime = Timer.getFPGATimestamp() + 1; 
+        oneTime2 = true;
+      }
+      if(leftRumbleTime >= Timer.getFPGATimestamp()) driver.setRumble(RumbleType.kLeftRumble, 1);
+      else {
+        driver.setRumble(RumbleType.kBothRumble, 0); 
+        oneTime2 = false;
+      }
+    }
+  }
+}
+
+//testing motors
     // if(driver.getPOV() == 0) s_Swerve.mSwerveMods[0].setDriveMotor(1);
     // if(driver.getPOV() == 45) s_Swerve.mSwerveMods[0].setAngleMotor(0.3);
     // if(driver.getPOV() == 90) s_Swerve.mSwerveMods[1].setDriveMotor(1);
@@ -98,5 +129,3 @@ public class TeleopDriver extends Command {
     // if(driver.getPOV() == 225) s_Swerve.mSwerveMods[2].setAngleMotor(0.3);
     // if(driver.getPOV() == 270) s_Swerve.mSwerveMods[3].setDriveMotor(1);
     // if(driver.getPOV() == 315) s_Swerve.mSwerveMods[3].setAngleMotor(0.3);
-  }
-}

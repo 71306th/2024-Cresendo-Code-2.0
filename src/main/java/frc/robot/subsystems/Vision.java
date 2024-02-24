@@ -64,6 +64,10 @@ public class Vision extends SubsystemBase {
     Variables.VisionControl.visionYaw = x;
     Variables.VisionControl.botToSpeakerDis = coordinateArr[2] / Math.cos(Constants.Vision.cameraRoll) / Math.cos(x);
 
+    if(Variables.OperatorControl.isAuto && (Variables.VisionControl.id == 4 || Variables.VisionControl.id == 7)) Variables.VisionControl.hasTarget = true;
+    else if(Variables.OperatorControl.isAmp && (Variables.VisionControl.id == 5 || Variables.VisionControl.id == 6)) Variables.VisionControl.hasTarget = true;
+    else Variables.VisionControl.hasTarget = false;
+
     SmartDashboard.putNumber("LimelightVaild", valid);
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);

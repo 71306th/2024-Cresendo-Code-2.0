@@ -91,6 +91,9 @@ public class SuperStructure extends SubsystemBase {
   private IntakeStates intakeState;
   private IntakeStates lastIntakeState;
 
+  private double tilterGoalAngle;
+  private double intakeShootGoalSpeed;
+
   public SuperStructure() {
     tilterMaster = new TalonFX(Constants.SuperStructure.tilterMaster, "GTX7130");
     tilterSlave = new TalonFX(Constants.SuperStructure.tilterSlave, "GTX7130");
@@ -198,61 +201,83 @@ public class SuperStructure extends SubsystemBase {
         intakeState = IntakeStates.auto;
         lastTilterState = tilterState;
         lastIntakeState = intakeState;
+        Variables.OperatorControl.isAuto = true;
+        Variables.OperatorControl.isAmp = false;
         break;
       case Base:
         tilterState = TilterStates.base;
         intakeState = IntakeStates.base;
         lastTilterState = tilterState;
         lastIntakeState = intakeState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = false;
       case Podium:
         tilterState = TilterStates.podium;
         intakeState = IntakeStates.podium;
         lastTilterState = tilterState;
         lastIntakeState = intakeState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = false;
         break;
       case Floor:
         tilterState = TilterStates.floor;
         intakeState = IntakeStates.floor;
         lastTilterState = tilterState;
         lastIntakeState = intakeState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = false;
         break;
       case Amp:
         tilterState = TilterStates.amp;
         intakeState = IntakeStates.amp;
         lastTilterState = tilterState;
         lastIntakeState = intakeState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = true;
         break;
       case Idle:
         tilterState = TilterStates.idle;
         intakeState = IntakeStates.idle;
         lastTilterState = tilterState;
         lastIntakeState = intakeState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = false;
         break;
       case ManualTilterRun:
         tilterState = TilterStates.manualRun;
         intakeState = lastIntakeState;
         lastTilterState = tilterState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = false;
         break;
       case ManualTilterLock:
         if(lastTilterState == TilterStates.manualRun) tilterState = TilterStates.manualStop;
         else tilterState = lastTilterState;
         intakeState = lastIntakeState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = false;
         break;
       case ManualIntakeRun:
         tilterState = lastTilterState;
         intakeState = IntakeStates.manualRun;
         lastIntakeState = intakeState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = false;
         break;
       case ManualIntakeStop:
-      tilterState = lastTilterState;
-      if(lastIntakeState == IntakeStates.manualRun) intakeState = IntakeStates.manualStop;
-      else intakeState = lastIntakeState;
+        tilterState = lastTilterState;
+        if(lastIntakeState == IntakeStates.manualRun) intakeState = IntakeStates.manualStop;
+        else intakeState = lastIntakeState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = false;
         break;
       case Emergency:
         tilterState = TilterStates.emergency;
         intakeState = IntakeStates.emergency;
         lastTilterState = tilterState;
         lastIntakeState = intakeState;
+        Variables.OperatorControl.isAuto = false;
+        Variables.OperatorControl.isAmp = false;
         break;
     }
   }
@@ -260,68 +285,70 @@ public class SuperStructure extends SubsystemBase {
   public void updateTilterStates() {
     switch (tilterState) {
       case auto:
-        if(calculateTilterAngle()!=404) setTilter(MathUtility.clamp(tilterPID.calculate(calculateTilterAngle() - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
-        else setTilter(MathUtility.clamp(tilterPID.calculate(Constants.SuperStructure.tilterIdleAngle - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
+        if(calculateTilterAngle()!=404) tilterGoalAngle = calculateTilterAngle();
+        else tilterGoalAngle = Constants.SuperStructure.tilterIdleAngle;
         break;
       case base:
-        setTilter(MathUtility.clamp(tilterPID.calculate(Constants.SuperStructure.tilterBaseAngle - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
+        tilterGoalAngle = Constants.SuperStructure.tilterBaseAngle;
         break;
       case podium:
-        setTilter(MathUtility.clamp(tilterPID.calculate(Constants.SuperStructure.tilterPodiumAngle - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
+        tilterGoalAngle = Constants.SuperStructure.tilterPodiumAngle;
         break;
       case floor:
-        setTilter(MathUtility.clamp(tilterPID.calculate(Constants.SuperStructure.tilterBaseAngle - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
+        tilterGoalAngle = Constants.SuperStructure.tilterFloorAngle;
         break;
       case amp:
-        setTilter(MathUtility.clamp(tilterPID.calculate(Constants.SuperStructure.tilterAmpAngle - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
+        tilterGoalAngle = Constants.SuperStructure.tilterAmpAngle;
         break;
       case idle:
-        setTilter(MathUtility.clamp(tilterPID.calculate(Constants.SuperStructure.tilterIdleAngle - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
+        tilterGoalAngle = Constants.SuperStructure.tilterIdleAngle;
         break;
       case manualRun:
-        setTilter(Variables.OperatorControl.tilterOutput);
+        tilterGoalAngle = Variables.OperatorControl.tilterOutput;
         break;
       case manualStop:
         lockTilter(getTilterAngle());
         break;
       case emergency:
-        setTilter(0);
+        tilterGoalAngle = 0;
         break;
     }
+    setTilter(MathUtility.clamp(tilterPID.calculate(tilterGoalAngle - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
   }
 
   public void updateIntakeStates() {
     switch (intakeState) {
       case auto:
-        if(calculateShootingSpeed()!=404) setIntakeShooting(MathUtility.clamp(calculateShootingSpeed(), Constants.SuperStructure.intakeAutoMinSpeed, Constants.SuperStructure.intakeAutoMaxSpeed));
-        else setIntakeShooting(Constants.SuperStructure.intakeIdleSpeed);
+        if(calculateShootingSpeed()!=404) intakeShootGoalSpeed = calculateShootingSpeed();
+        else intakeShootGoalSpeed = Constants.SuperStructure.intakeIdleSpeed;
         break;
       case base:
-        setIntakeShooting(Constants.SuperStructure.intakeBaseSpeed);
+        intakeShootGoalSpeed = Constants.SuperStructure.intakeBaseSpeed;
         break;
       case podium:
-        setIntakeShooting(Constants.SuperStructure.intakePodiumSpeed);
+        intakeShootGoalSpeed = Constants.SuperStructure.intakePodiumSpeed;
         break;
       case floor:
         if(!isLoaded()) setIntakeClaiming(Constants.SuperStructure.intakeClaimSpeed);
         else setIntakeClaiming(0);
         break;
       case amp:
-        setIntakeShooting(Constants.SuperStructure.intakeAmpSpeed);
+        intakeShootGoalSpeed = Constants.SuperStructure.intakeAmpSpeed;
         break;
       case idle:
-        setIntakeShooting(Constants.SuperStructure.intakeIdleSpeed);
+        intakeShootGoalSpeed = Constants.SuperStructure.intakeIdleSpeed;
         break;
       case manualRun:
-        setIntakeShooting(Variables.OperatorControl.intakeOutput);
+        intakeShootGoalSpeed = Variables.OperatorControl.intakeOutput;
         break;
       case manualStop:
-        setIntakeShooting(0);
+        intakeShootGoalSpeed = 0;
         break;
       case emergency:
-        setIntakeShooting(0);
+        intakeShootGoalSpeed = 0;
         break;
     }
+    setIntakeShooting(intakeShootGoalSpeed);
   }
 
   @Override
@@ -342,5 +369,8 @@ public class SuperStructure extends SubsystemBase {
     SmartDashboard.putNumber("G", detectedColor.green);
     SmartDashboard.putNumber("B", detectedColor.blue);
     SmartDashboard.putBoolean("Loaded", isLoaded());
+
+    if(getTilterAngle() <= tilterGoalAngle+1 && getTilterAngle() >= tilterGoalAngle-1) Variables.OperatorControl.isInPlace = true;
+    else Variables.OperatorControl.isInPlace = false;
   }
 }

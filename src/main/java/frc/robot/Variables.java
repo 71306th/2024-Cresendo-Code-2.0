@@ -19,7 +19,8 @@ public class Variables {
   public static final class OperatorControl {
     /* Superstructure State Related */
     public static boolean isAuto = false;
-    public static boolean isFloor = false;
+    public static boolean isAmp = false;
+    public static boolean isInPlace = false;
     
     /* Manually Controlling Parameters */
     public static double intakeOutput = 0.0;
@@ -41,5 +42,8 @@ public class Variables {
     public static double visionYaw;
     public static Pose3d visionPose3d;
     public static double botToSpeakerDis;
+
+    /* Has Target(Disables Driver Rotating) */
+    public static boolean hasTarget;
   }
 }
