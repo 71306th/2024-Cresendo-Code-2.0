@@ -118,7 +118,7 @@ public class SuperStructure extends SubsystemBase {
     tilterEncoderConfigurator.apply(CTREConfigs.CTREConfiguration());
     tilterEncoder.setPosition(0);
 
-    i2cPort = I2C.Port.kOnboard;
+    i2cPort = I2C.Port.kMXP;
     colorSenser = new ColorSensorV3(i2cPort);
 
     limitSwitch = new DigitalInput(Constants.SuperStructure.tilterLimitSwitch);
@@ -331,6 +331,7 @@ public class SuperStructure extends SubsystemBase {
       case floor:
         if(!isLoaded()) setIntakeClaiming(Constants.SuperStructure.intakeClaimSpeed);
         else setIntakeClaiming(0);
+        intakeShootGoalSpeed = 0;
         break;
       case amp:
         intakeShootGoalSpeed = Constants.SuperStructure.intakeAmpSpeed;
@@ -353,24 +354,27 @@ public class SuperStructure extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Arm Percent Output", Variables.OperatorControl.tilterOutput);
-    SmartDashboard.putNumber("Arm Angle", getTilterAngle());
-    SmartDashboard.putNumber("Locked Angle", Variables.OperatorControl.tilterLockedAngle);
-    SmartDashboard.putNumber("Intake Percent Output", Variables.OperatorControl.intakeOutput);
     if(Variables.OperatorControl.tilterManualIsLocked){
       double currentAngle = getTilterAngle();
       double output = lockPID.calculate(Variables.OperatorControl.tilterLockedAngle - currentAngle);
       tilterMaster.set(output);
     }
     if(limitSwitch.get()) tilterEncoder.setPosition(0);
-
     detectedColor = colorSenser.getColor();
+    if((getTilterAngle() <= tilterGoalAngle+1 && getTilterAngle() >= tilterGoalAngle-1) && (
+      tilterState == TilterStates.auto || tilterState == TilterStates.base || tilterState == TilterStates.podium || tilterState == TilterStates.floor || tilterState == TilterStates.amp
+      )) Variables.OperatorControl.isInPlace = true;
+    else Variables.OperatorControl.isInPlace = false;
+
+    SmartDashboard.putNumber("Tilter Angle", getTilterAngle());
+    SmartDashboard.putNumber("Intake Speed", intakeShootGoalSpeed);
+    SmartDashboard.putNumber("Manual Tilter Percent Output", Variables.OperatorControl.tilterOutput);
+    SmartDashboard.putNumber("Manual Tilter Locked Angle", Variables.OperatorControl.tilterLockedAngle);
+    SmartDashboard.putNumber("Manual Intake Percent Output", Variables.OperatorControl.intakeOutput);
     SmartDashboard.putNumber("R", detectedColor.red);
     SmartDashboard.putNumber("G", detectedColor.green);
     SmartDashboard.putNumber("B", detectedColor.blue);
     SmartDashboard.putBoolean("Loaded", isLoaded());
-
-    if(getTilterAngle() <= tilterGoalAngle+1 && getTilterAngle() >= tilterGoalAngle-1) Variables.OperatorControl.isInPlace = true;
-    else Variables.OperatorControl.isInPlace = false;
+    SmartDashboard.putBoolean("Semi-Auto In Place(only auto, base, podium, floor, amp)", Variables.OperatorControl.isInPlace);
   }
 }

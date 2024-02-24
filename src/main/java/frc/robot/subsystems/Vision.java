@@ -19,18 +19,14 @@ import frc.robot.Variables;
 
 public class Vision extends SubsystemBase {
 
-  private DoubleSubscriber tv;
   private DoubleSubscriber tx;
   private DoubleSubscriber ty;
-  private DoubleSubscriber ta;
   private DoubleSubscriber tid;
   private DoubleArraySubscriber coordinate;
   private IntegerPublisher tled;
 
-  private double valid;
   private double x;
   private double y;
-  private double area;
   private double[] coordinateArr;
   private int ledMode;
 
@@ -38,10 +34,8 @@ public class Vision extends SubsystemBase {
   
   public Vision() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
-    tv = table.getDoubleTopic("tv").subscribe(0.0);
     tx = table.getDoubleTopic("tx").subscribe(0.0);
     ty = table.getDoubleTopic("ty").subscribe(0.0);
-    ta = table.getDoubleTopic("ta").subscribe(0.0);
     tid = table.getDoubleTopic("tid").subscribe(0.0);
     coordinate = table.getDoubleArrayTopic("targetpose_cameraspace").subscribe(new double[6]); // 開3D模式 2D不行
     tled = table.getIntegerTopic("ledMode").publish();
@@ -53,10 +47,8 @@ public class Vision extends SubsystemBase {
   public void periodic() {
 
     /* getting values */
-    valid = tv.get();
     x = tx.get();
     y = ty.get();
-    area = ta.get();
     Variables.VisionControl.id = tid.get();
     coordinateArr = coordinate.get();
 
@@ -68,18 +60,11 @@ public class Vision extends SubsystemBase {
     else if(Variables.OperatorControl.isAmp && (Variables.VisionControl.id == 5 || Variables.VisionControl.id == 6)) Variables.VisionControl.hasTarget = true;
     else Variables.VisionControl.hasTarget = false;
 
-    SmartDashboard.putNumber("LimelightVaild", valid);
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("LimelightID", Variables.VisionControl.id);
-    SmartDashboard.putNumber("LimelightToTargetX", coordinateArr[0]);
-    SmartDashboard.putNumber("LimelightToTargetY", coordinateArr[1]);
     SmartDashboard.putNumber("LimelightToTargetZ", coordinateArr[2]);
-    SmartDashboard.putNumber("LimelightToTargetRX", coordinateArr[3]);
-    SmartDashboard.putNumber("LimelightToTargetRY", coordinateArr[4]);
-    SmartDashboard.putNumber("LimelightToTargetRZ", coordinateArr[5]);
-    SmartDashboard.putNumber("LEDStatus", ledMode);
+    SmartDashboard.putNumber("BotToSpeakerDistance", Variables.VisionControl.botToSpeakerDis);
   }
 
   /* fetches */
