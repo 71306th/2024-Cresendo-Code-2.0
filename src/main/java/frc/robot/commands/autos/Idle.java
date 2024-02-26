@@ -8,14 +8,14 @@ import frc.robot.Constants;
 import frc.robot.Variables;
 
 
-public class ShootBase extends InstantCommand {
+public class Idle extends InstantCommand {
 
   private SuperStructure superStructure;
 
   private boolean OneTime = false;
   private double timer;
 
-    public ShootBase(SuperStructure superStructure) {
+    public Idle(SuperStructure superStructure) {
         this.superStructure = superStructure;
         addRequirements(superStructure);
     }
@@ -26,7 +26,7 @@ public class ShootBase extends InstantCommand {
 
     @Override
     public void execute() {
-        superStructure.setState(InputStates.Base);
+        superStructure.setState(InputStates.Idle);
         if (Variables.OperatorControl.isInPlace) {
             if (OneTime = false) {
                 OneTime = true;
