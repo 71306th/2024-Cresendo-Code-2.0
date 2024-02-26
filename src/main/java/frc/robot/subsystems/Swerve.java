@@ -47,7 +47,7 @@ public class Swerve extends SubsystemBase {
     gyro4 = new Pigeon2(Constants.Swerve.pigeon4, "GTX7130");
     zeroGyro();
 
-    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), pos);
+    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getPositions());
 
     mSwerveMods =
         new SwerveModule[] {
@@ -62,12 +62,12 @@ public class Swerve extends SubsystemBase {
     adjustPID = new PID(0.02, 0, 0, 0, 0);
   }
 
-  public static SwerveModulePosition[] pos = {
-    new SwerveModulePosition(0, new Rotation2d(0)),
-    new SwerveModulePosition(0, new Rotation2d(0)),
-    new SwerveModulePosition(0, new Rotation2d(0)),
-    new SwerveModulePosition(0, new Rotation2d(0))
-  };
+  // public static SwerveModulePosition[] pos = {
+  //   new SwerveModulePosition(0, new Rotation2d(0)),
+  //   new SwerveModulePosition(0, new Rotation2d(0)),
+  //   new SwerveModulePosition(0, new Rotation2d(0)),
+  //   new SwerveModulePosition(0, new Rotation2d(0))
+  // };
 
   public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(

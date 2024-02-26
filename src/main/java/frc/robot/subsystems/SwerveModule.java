@@ -23,6 +23,7 @@ import frc.lib.math.OnboardModuleState;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class SwerveModule extends SubsystemBase {
 
@@ -50,6 +51,7 @@ public class SwerveModule extends SubsystemBase {
 
     /* Angle Encoder Config */
     angleEncoder = new CANcoder(moduleConstants.cancoderID, "GTX7130");
+    angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCANcoderConfig);
 
     /* Angle Motor Config */
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
