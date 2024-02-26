@@ -55,11 +55,11 @@ RightBumperButton:Super Structure Idle Mode On/Off(Will Set Tilter & Intake To I
 BackButton:Super Structure Emergency Stop(Will Set Every Super Structure Motor Output To 0, Only When Emergency)
 StartButton:Super Structure Shoot(Requires Holding)
 LeftStickButton:Arm Manually Lock(Only Enabled When Has Pressed Manual Control Buttons)
-RightStickButton:Intake Manually Turn Off(Only Enabled When Has Pressed Manual Control Buttons)
-POV 0:Arm Output Add 0.05
-POV 90:Intake Output Add 0.1
-POV 180:Arm Output Minus 0.05
-POV 270:Intake Output Minus 0.1
+RightStickButton:Intake Manually Turn Off(Only Enabled  When Has Pressed Manual Control Buttons)
+POV 0:Arm Output Add 0.01
+POV 90:Intake Output Add 0.01
+POV 180:Arm Output Minus 0.01
+POV 270:Intake Output Minus 0.01
 LeftTrigger:Arm Manually Control(Requires Arm Output, Will Enable Arm Manually Lock)
 RightTrigger:Intake Manually Control(Requires Intake Output, Will Enable Intake Manually Turn Off)
 

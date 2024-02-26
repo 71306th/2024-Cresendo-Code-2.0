@@ -94,6 +94,8 @@ public class SuperStructure extends SubsystemBase {
   private double tilterGoalAngle;
   private double intakeShootGoalSpeed;
 
+  private boolean isPID = true;
+
   public SuperStructure() {
     tilterMaster = new TalonFX(Constants.SuperStructure.tilterMaster, "GTX7130");
     tilterSlave = new TalonFX(Constants.SuperStructure.tilterSlave, "GTX7130");
@@ -254,6 +256,8 @@ public class SuperStructure extends SubsystemBase {
         if(lastTilterState == TilterStates.manualRun) tilterState = TilterStates.manualStop;
         else tilterState = lastTilterState;
         intakeState = lastIntakeState;
+        lastTilterState = tilterState;
+        lastIntakeState = intakeState;
         Variables.OperatorControl.isAuto = false;
         Variables.OperatorControl.isAmp = false;
         break;
@@ -268,6 +272,8 @@ public class SuperStructure extends SubsystemBase {
         tilterState = lastTilterState;
         if(lastIntakeState == IntakeStates.manualRun) intakeState = IntakeStates.manualStop;
         else intakeState = lastIntakeState;
+        lastTilterState = tilterState;
+        lastIntakeState = intakeState;
         Variables.OperatorControl.isAuto = false;
         Variables.OperatorControl.isAmp = false;
         break;
@@ -285,35 +291,44 @@ public class SuperStructure extends SubsystemBase {
   public void updateTilterStates() {
     switch (tilterState) {
       case auto:
+        isPID = true;
         if(calculateTilterAngle()!=404) tilterGoalAngle = calculateTilterAngle();
         else tilterGoalAngle = Constants.SuperStructure.tilterIdleAngle;
         break;
       case base:
+        isPID = true;
         tilterGoalAngle = Constants.SuperStructure.tilterBaseAngle;
         break;
       case podium:
+        isPID = true;
         tilterGoalAngle = Constants.SuperStructure.tilterPodiumAngle;
         break;
       case floor:
+        isPID = true;
         tilterGoalAngle = Constants.SuperStructure.tilterFloorAngle;
         break;
       case amp:
+        isPID = true;
         tilterGoalAngle = Constants.SuperStructure.tilterAmpAngle;
         break;
       case idle:
+        isPID = true;
         tilterGoalAngle = Constants.SuperStructure.tilterIdleAngle;
         break;
       case manualRun:
-        tilterGoalAngle = Variables.OperatorControl.tilterOutput;
+        isPID = false;
+        setTilter(Variables.OperatorControl.tilterOutput);
         break;
       case manualStop:
+        isPID = false;
         lockTilter(getTilterAngle());
         break;
       case emergency:
+        isPID = true;
         tilterGoalAngle = 0;
         break;
     }
-    setTilter(MathUtility.clamp(tilterPID.calculate(tilterGoalAngle - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
+    if(isPID == true) setTilter(MathUtility.clamp(tilterPID.calculate(tilterGoalAngle - getTilterAngle()), -Constants.SuperStructure.tilterAutoMaxSpeed, Constants.SuperStructure.tilterAutoMaxSpeed));
   }
 
   public void updateIntakeStates() {
@@ -354,6 +369,9 @@ public class SuperStructure extends SubsystemBase {
 
   @Override
   public void periodic() {
+    updateOverallStates();
+    updateTilterStates();
+    updateIntakeStates();
     if(Variables.OperatorControl.tilterManualIsLocked){
       double currentAngle = getTilterAngle();
       double output = lockPID.calculate(Variables.OperatorControl.tilterLockedAngle - currentAngle);
@@ -371,6 +389,8 @@ public class SuperStructure extends SubsystemBase {
     SmartDashboard.putNumber("Manual Tilter Percent Output", Variables.OperatorControl.tilterOutput);
     SmartDashboard.putNumber("Manual Tilter Locked Angle", Variables.OperatorControl.tilterLockedAngle);
     SmartDashboard.putNumber("Manual Intake Percent Output", Variables.OperatorControl.intakeOutput);
+    SmartDashboard.putString("Tilter State", tilterState.toString());
+    SmartDashboard.putString("Intake State", intakeState.toString());
     // SmartDashboard.putNumber("R", detectedColor.red);
     // SmartDashboard.putNumber("G", detectedColor.green);
     // SmartDashboard.putNumber("B", detectedColor.blue);

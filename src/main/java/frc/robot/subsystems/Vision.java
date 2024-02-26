@@ -65,6 +65,7 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("LimelightID", Variables.VisionControl.id);
     SmartDashboard.putNumber("LimelightToTargetZ", coordinateArr[2]);
     SmartDashboard.putNumber("BotToSpeakerDistance", Variables.VisionControl.botToSpeakerDis);
+    SmartDashboard.putBoolean("hasTarget", Variables.VisionControl.hasTarget);
   }
 
   /* fetches */

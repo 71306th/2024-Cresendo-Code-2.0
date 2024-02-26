@@ -56,22 +56,24 @@ public class TeleopOperator extends Command {
     if(operator.getStartButtonReleased()) m_SuperStructure.setIntakeClaiming(0);
     if(operator.getLeftStickButton()) m_SuperStructure.setState(InputStates.ManualTilterLock);
     if(operator.getRightStickButton()) m_SuperStructure.setState(InputStates.ManualIntakeStop);
+    if(operator.getLeftTriggerAxis() >= 0.5) m_SuperStructure.setState(InputStates.ManualTilterRun);
+    if(operator.getRightTriggerAxis() >= 0.5) m_SuperStructure.setState(InputStates.ManualIntakeRun);
     if(operator.getPOV() == 0 && onePressTilterPlus == false) {
-      Variables.OperatorControl.tilterOutput += 0.05;
+      Variables.OperatorControl.tilterOutput += 0.01;
       onePressTilterPlus = true;
     }
     if(operator.getPOV() == 180 && onePressTilterMinus == false) {
-      Variables.OperatorControl.tilterOutput -= 0.05;
+      Variables.OperatorControl.tilterOutput -= 0.01;
       onePressTilterMinus = true;
     }
     if(operator.getPOV() != 0) onePressTilterMinus = false;
     if(operator.getPOV() != 180) onePressTilterPlus = false;
     if(operator.getPOV() == 90 && onePressIntakePlus == false) {
-      Variables.OperatorControl.intakeOutput += 0.05;
+      Variables.OperatorControl.intakeOutput += 0.01;
       onePressIntakePlus = true;
     }
     if(operator.getPOV() == 270 && onePressIntakeMinus == false) {
-      Variables.OperatorControl.intakeOutput -= 0.05;
+      Variables.OperatorControl.intakeOutput -= 0.01;
       onePressIntakeMinus = true;
     }
     if(operator.getPOV() != 90) onePressIntakeMinus = false;

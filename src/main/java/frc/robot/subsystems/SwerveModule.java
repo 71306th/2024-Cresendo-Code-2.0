@@ -102,7 +102,7 @@ public class SwerveModule extends SubsystemBase {
     angleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     angleMotor.setInverted(Constants.Swerve.angleInvert);
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
-    rotorPID = new PID(Constants.Swerve.angleKP, 0, Constants.Swerve.angleKD, 0, 0);
+    rotorPID = new PID(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD, Constants.Swerve.angleKIWindUp, Constants.Swerve.angleKILimit);
     angleMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
   }
   
@@ -123,8 +123,7 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public Rotation2d getAngle() {
-    return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue() * 360).plus(angleOffset);
-
+    return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue()).plus(angleOffset);
   }
 
   public SwerveModulePosition getPosition(){
