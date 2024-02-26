@@ -37,8 +37,8 @@ public class SuperStructure extends SubsystemBase {
   private final CANcoder tilterEncoder;
   private final CANcoderConfigurator tilterEncoderConfigurator;
   
-  private final I2C.Port i2cPort;
-  private final ColorSensorV3 colorSenser;
+  // private final I2C.Port i2cPort;
+  // private final ColorSensorV3 colorSenser;
   
   private final DigitalInput limitSwitch;
   
@@ -118,8 +118,8 @@ public class SuperStructure extends SubsystemBase {
     tilterEncoderConfigurator.apply(CTREConfigs.CTREConfiguration());
     tilterEncoder.setPosition(0);
 
-    i2cPort = I2C.Port.kMXP;
-    colorSenser = new ColorSensorV3(i2cPort);
+    // i2cPort = I2C.Port.kMXP;
+    // colorSenser = new ColorSensorV3(i2cPort);
 
     limitSwitch = new DigitalInput(Constants.SuperStructure.tilterLimitSwitch);
 
@@ -163,20 +163,20 @@ public class SuperStructure extends SubsystemBase {
   }
 
   public double getTilterAngle() {
-    return tilterEncoder.getPosition().getValue() * 360;
+    return -tilterEncoder.getPosition().getValue() * 360;
   }
 
   public void resetTilterAngle() {
     tilterEncoder.setPosition(0);
   }
 
-  public boolean isLoaded() {
-    boolean redTrue = detectedColor.red <= Constants.SuperStructure.noteColorNoShade.red ? detectedColor.red >= Constants.SuperStructure.noteColorInShade.red ? true : false : false;
-    boolean blueTrue = detectedColor.blue <= Constants.SuperStructure.noteColorNoShade.blue ? detectedColor.blue >= Constants.SuperStructure.noteColorInShade.blue ? true : false : false;
-    boolean greenTrue = detectedColor.green <= Constants.SuperStructure.noteColorNoShade.green ? detectedColor.green >= Constants.SuperStructure.noteColorInShade.green ? true : false : false;
-    if(redTrue && blueTrue && greenTrue) return true;
-    else return false;
-  }
+  // public boolean isLoaded() {
+  //   boolean redTrue = detectedColor.red <= Constants.SuperStructure.noteColorNoShade.red ? detectedColor.red >= Constants.SuperStructure.noteColorInShade.red ? true : false : false;
+  //   boolean blueTrue = detectedColor.blue <= Constants.SuperStructure.noteColorNoShade.blue ? detectedColor.blue >= Constants.SuperStructure.noteColorInShade.blue ? true : false : false;
+  //   boolean greenTrue = detectedColor.green <= Constants.SuperStructure.noteColorNoShade.green ? detectedColor.green >= Constants.SuperStructure.noteColorInShade.green ? true : false : false;
+  //   if(redTrue && blueTrue && greenTrue) return true;
+  //   else return false;
+  // }
 
   public InputStates getState() {
     return commandState;
@@ -329,8 +329,8 @@ public class SuperStructure extends SubsystemBase {
         intakeShootGoalSpeed = Constants.SuperStructure.intakePodiumSpeed;
         break;
       case floor:
-        if(!isLoaded()) setIntakeClaiming(Constants.SuperStructure.intakeClaimSpeed);
-        else setIntakeClaiming(0);
+        // if(!isLoaded()) setIntakeClaiming(Constants.SuperStructure.intakeClaimSpeed);
+        // else setIntakeClaiming(0);
         intakeShootGoalSpeed = 0;
         break;
       case amp:
@@ -359,8 +359,8 @@ public class SuperStructure extends SubsystemBase {
       double output = lockPID.calculate(Variables.OperatorControl.tilterLockedAngle - currentAngle);
       tilterMaster.set(output);
     }
-    if(limitSwitch.get()) tilterEncoder.setPosition(0);
-    detectedColor = colorSenser.getColor();
+    // if(limitSwitch.get()) tilterEncoder.setPosition(0);
+    // detectedColor = colorSenser.getColor();
     if((getTilterAngle() <= tilterGoalAngle+1 && getTilterAngle() >= tilterGoalAngle-1) && (
       tilterState == TilterStates.auto || tilterState == TilterStates.base || tilterState == TilterStates.podium || tilterState == TilterStates.floor || tilterState == TilterStates.amp
       )) Variables.OperatorControl.isInPlace = true;
@@ -371,10 +371,10 @@ public class SuperStructure extends SubsystemBase {
     SmartDashboard.putNumber("Manual Tilter Percent Output", Variables.OperatorControl.tilterOutput);
     SmartDashboard.putNumber("Manual Tilter Locked Angle", Variables.OperatorControl.tilterLockedAngle);
     SmartDashboard.putNumber("Manual Intake Percent Output", Variables.OperatorControl.intakeOutput);
-    SmartDashboard.putNumber("R", detectedColor.red);
-    SmartDashboard.putNumber("G", detectedColor.green);
-    SmartDashboard.putNumber("B", detectedColor.blue);
-    SmartDashboard.putBoolean("Loaded", isLoaded());
+    // SmartDashboard.putNumber("R", detectedColor.red);
+    // SmartDashboard.putNumber("G", detectedColor.green);
+    // SmartDashboard.putNumber("B", detectedColor.blue);
+    // SmartDashboard.putBoolean("Loaded", isLoaded());
     SmartDashboard.putBoolean("Semi-Auto In Place(only auto, base, podium, floor, amp)", Variables.OperatorControl.isInPlace);
   }
 }

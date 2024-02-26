@@ -50,7 +50,6 @@ public class SwerveModule extends SubsystemBase {
 
     /* Angle Encoder Config */
     angleEncoder = new CANcoder(moduleConstants.cancoderID, "GTX7130");
-    configAngleEncoder();
 
     /* Angle Motor Config */
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
@@ -94,11 +93,8 @@ public class SwerveModule extends SubsystemBase {
     }
   }
 
-  private void configAngleEncoder() {
-    // angleEncoderConfigurator = angleEncoder.getConfigurator();
-    // angleEncoderConfigurator.apply(CTREConfigs.CTREConfiguration(angleOffset.getDegrees()));
-    angleEncoder.setPosition(0);
-  }
+  // private void configAngleEncoder() {
+  // } fuck this shit it's no use
 
   private void configAngleMotor() {
     angleMotor.restoreFactoryDefaults();
@@ -127,7 +123,8 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public Rotation2d getAngle() {
-    return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue()).plus(angleOffset);
+    return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue() * 360).plus(angleOffset);
+
   }
 
   public SwerveModulePosition getPosition(){

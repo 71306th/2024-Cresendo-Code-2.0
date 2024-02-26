@@ -12,7 +12,7 @@ import frc.robot.subsystems.Swerve;
 
 public class Turn extends InstantCommand { // actually no need
 
-  private Swerve m_Swerve = new Swerve();
+  private Swerve m_Swerve;
   private final PID turnPID = new PID(0, 0, 0, 0, 0);
   private double goalAngle;
   private double currentAngle; 

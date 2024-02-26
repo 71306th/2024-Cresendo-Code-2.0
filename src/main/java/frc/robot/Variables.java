@@ -44,6 +44,6 @@ public class Variables {
     public static double botToSpeakerDis;
 
     /* Has Target(Disables Driver Rotating) */
-    public static boolean hasTarget;
+    public static boolean hasTarget = false;
   }
 }

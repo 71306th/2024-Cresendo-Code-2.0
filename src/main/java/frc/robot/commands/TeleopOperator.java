@@ -39,7 +39,9 @@ public class TeleopOperator extends Command {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    operator.setRumble(RumbleType.kBothRumble, 0);
+  }
 
   @Override
   public void execute() {
@@ -75,19 +77,20 @@ public class TeleopOperator extends Command {
     if(operator.getPOV() != 90) onePressIntakeMinus = false;
     if(operator.getPOV() != 270) onePressIntakePlus = false;
 
-    if(m_SuperStructure.isLoaded()){
-      if(!oneTimeIsLoaded) {
-        rightRumbleTime = Timer.getFPGATimestamp() + 1; 
-        oneTimeIsLoaded = true;
-      }
-      if(rightRumbleTime >= Timer.getFPGATimestamp()) operator.setRumble(RumbleType.kRightRumble, 1);
-      else {
-        operator.setRumble(RumbleType.kBothRumble, 0); 
-        oneTimeIsLoaded = false;
-      }
-    } else if (Variables.OperatorControl.isInPlace) {
+    // if(m_SuperStructure.isLoaded()){
+    //   if(!oneTimeIsLoaded) {
+    //     rightRumbleTime = Timer.getFPGATimestamp() + Constants.JoystickConstants.rumbleTime; 
+    //     oneTimeIsLoaded = true;
+    //   }
+    //   if(rightRumbleTime >= Timer.getFPGATimestamp()) operator.setRumble(RumbleType.kRightRumble, 1);
+    //   else {
+    //     operator.setRumble(RumbleType.kBothRumble, 0); 
+    //     oneTimeIsLoaded = false;
+    //   }
+    // } else
+     if (Variables.OperatorControl.isInPlace) {
       if(!oneTimeIsInPlace) {
-        leftRumbleTime = Timer.getFPGATimestamp() + 1; 
+        leftRumbleTime = Timer.getFPGATimestamp() + Constants.JoystickConstants.rumbleTime; 
         oneTimeIsInPlace = true;
       }
       if(leftRumbleTime >= Timer.getFPGATimestamp()) operator.setRumble(RumbleType.kLeftRumble, 1);

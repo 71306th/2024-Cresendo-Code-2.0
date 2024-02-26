@@ -21,24 +21,20 @@ import frc.robot.commands.autos.Turn;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class Blue1 extends SequentialCommandGroup {
-
-  public Blue1() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-
+  public Blue1(Swerve m_Swerve, SuperStructure m_SuperStructure) {
     addCommands(
-      new Idle(new SuperStructure()),
-      new MoveTo(new Swerve(), new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
-      new ShootBase(new SuperStructure()),
-      new Idle(new SuperStructure()),
-      new MoveTo(new Swerve(), new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
-      new Turn(new Swerve(), 0),
-      new MoveTo(new Swerve(), new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
-      new ClaimFloor(new SuperStructure()),
-      new Idle(new SuperStructure()),
-      new Turn(new Swerve(), 0),
-      new MoveTo(new Swerve(), new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
-      new ShootAmp(new SuperStructure())
+      new Idle(m_SuperStructure),
+      new MoveTo(m_Swerve, new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
+      new ShootBase(m_SuperStructure),
+      new Idle(m_SuperStructure),
+      new MoveTo(m_Swerve, new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
+      new Turn(m_Swerve, 0),
+      new MoveTo(m_Swerve, new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
+      new ClaimFloor(m_SuperStructure),
+      new Idle(m_SuperStructure),
+      new Turn(m_Swerve, 0),
+      new MoveTo(m_Swerve, new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
+      new ShootAmp(m_SuperStructure)
       );
   }
 }

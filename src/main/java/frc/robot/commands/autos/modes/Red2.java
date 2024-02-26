@@ -19,21 +19,17 @@ import frc.robot.commands.autos.ShootBase;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class Red2 extends SequentialCommandGroup {
-
-  public Red2() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-
+  public Red2(Swerve m_Swerve, SuperStructure m_SuperStructure) {
     addCommands(
-      new Idle(new SuperStructure()),
-      new MoveTo(new Swerve(), new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
-      new ShootBase(new SuperStructure()),
-      new Idle(new SuperStructure()),
-      new MoveTo(new Swerve(), new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
-      new ClaimFloor(new SuperStructure()),
-      new Idle(new SuperStructure()),
-      new MoveTo(new Swerve(), new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
-      new ShootBase(new SuperStructure())
+      new Idle(m_SuperStructure),
+      new MoveTo(m_Swerve, new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
+      new ShootBase(m_SuperStructure),
+      new Idle(m_SuperStructure),
+      new MoveTo(m_Swerve, new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
+      new ClaimFloor(m_SuperStructure),
+      new Idle(m_SuperStructure),
+      new MoveTo(m_Swerve, new Pose2d(new Translation2d(0, 0), new Rotation2d(0))),
+      new ShootBase(m_SuperStructure)
       );
   }
 }

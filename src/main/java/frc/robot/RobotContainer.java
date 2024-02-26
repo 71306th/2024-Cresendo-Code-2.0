@@ -36,12 +36,12 @@ public class RobotContainer {
   private final TeleopDriver teleSwerve = new TeleopDriver(m_Swerve, m_Controller);
   private final TeleopOperator teleSuperStructure = new TeleopOperator(m_SuperStructure, m_Controller);
 
-  private final Blue1 B1 = new Blue1();
-  private final Blue2 B2 = new Blue2();
-  private final Blue3 B3 = new Blue3();
-  private final Red1 R1 = new Red1();
-  private final Red2 R2 = new Red2();
-  private final Red3 R3 = new Red3();
+  private final Blue1 B1 = new Blue1(m_Swerve, m_SuperStructure);
+  private final Blue2 B2 = new Blue2(m_Swerve, m_SuperStructure);
+  private final Blue3 B3 = new Blue3(m_Swerve, m_SuperStructure);
+  private final Red1 R1 = new Red1(m_Swerve, m_SuperStructure);
+  private final Red2 R2 = new Red2(m_Swerve, m_SuperStructure);
+  private final Red3 R3 = new Red3(m_Swerve, m_SuperStructure);
 
 
   SendableChooser<Command> m_Chooser = new SendableChooser<>();
@@ -60,9 +60,9 @@ public class RobotContainer {
   private void configureBindings() {
 
     m_Chooser.setDefaultOption("Blue 1", B1); // close to amp
-    m_Chooser.addOption("Blue 2 meters", B2); // middle
+    m_Chooser.addOption("Blue 2", B2); // middle
     m_Chooser.addOption("Blue 3", B3); // close to podium
-    m_Chooser.setDefaultOption("Red 1", R1); // close to amp
+    m_Chooser.addOption("Red 1", R1); // close to amp
     m_Chooser.addOption("Red 2", R2); //  middle
     m_Chooser.addOption("Red 3", R3); // close to podium
 
