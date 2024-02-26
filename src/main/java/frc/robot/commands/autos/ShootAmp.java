@@ -1,6 +1,5 @@
 package frc.robot.commands.autos;
 
-import edu.wpi.first.units.Time;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.SuperStructure;
@@ -11,7 +10,7 @@ import frc.robot.Variables;
 
 public class ShootAmp extends InstantCommand {
 
-  private SuperStructure superStructure = new SuperStructure();
+  private SuperStructure superStructure;
 
   private boolean OneTime = false;
   private double timer;

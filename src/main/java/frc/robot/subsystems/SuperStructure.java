@@ -131,11 +131,11 @@ public class SuperStructure extends SubsystemBase {
     intakeState = IntakeStates.idle;
   }
 
-  public void setIntakeShooting(double speed) {
+  public void setIntakeShooting(double speed) { // 設定轉速
     intakeLowerMaster.set(speed);
   }
 
-  public void setIntakeClaiming(double speed) {
+  public void setIntakeClaiming(double speed) { // 調好轉速要射(?是要收吧，喔還是把note往shooter推
     intakeUpper.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
