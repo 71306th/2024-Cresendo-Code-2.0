@@ -54,7 +54,7 @@ public class SuperStructure extends SubsystemBase {
   private PID tilterPID;
   private PID lockPID;
 
-  public static enum TilterStates {
+  public enum TilterStates {
     auto,
     podium,
     base,
@@ -66,7 +66,7 @@ public class SuperStructure extends SubsystemBase {
     idle
   }
 
-  public static enum IntakeStates {
+  public enum IntakeStates {
     auto,
     podium,
     base,
@@ -78,7 +78,7 @@ public class SuperStructure extends SubsystemBase {
     idle
   }
 
-  public static enum InputStates {
+  public enum InputStates {
     Auto,
     Base,
     Podium,
@@ -182,11 +182,11 @@ public class SuperStructure extends SubsystemBase {
   }
 
   public boolean isLoaded() {
-    boolean redTrue = detectedColor.red <= Constants.SuperStructure.noteColorNoShade.red ? detectedColor.red >= Constants.SuperStructure.noteColorInShade.red ? true : false : false;
-    boolean blueTrue = detectedColor.blue <= Constants.SuperStructure.noteColorNoShade.blue ? detectedColor.blue >= Constants.SuperStructure.noteColorInShade.blue ? true : false : false;
-    boolean greenTrue = detectedColor.green <= Constants.SuperStructure.noteColorNoShade.green ? detectedColor.green >= Constants.SuperStructure.noteColorInShade.green ? true : false : false;
-    if(redTrue && blueTrue && greenTrue) return true;
-    else return false;
+    boolean redTrue = detectedColor.red <= Constants.SuperStructure.noteColorNoShade.red && (detectedColor.red >= Constants.SuperStructure.noteColorInShade.red);
+    boolean blueTrue = detectedColor.blue <= Constants.SuperStructure.noteColorNoShade.blue && (detectedColor.blue >= Constants.SuperStructure.noteColorInShade.blue);
+    boolean greenTrue = detectedColor.green <= Constants.SuperStructure.noteColorNoShade.green && detectedColor.green >= Constants.SuperStructure.noteColorInShade.green;
+
+    return redTrue && blueTrue && greenTrue;
   }
 
   public InputStates getState() {
