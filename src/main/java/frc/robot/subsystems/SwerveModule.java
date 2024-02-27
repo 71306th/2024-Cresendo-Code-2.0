@@ -27,7 +27,6 @@ import frc.robot.Constants;
 public class SwerveModule extends SubsystemBase {
 
   public int moduleNumber;
-  private double error;
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
   
@@ -38,8 +37,6 @@ public class SwerveModule extends SubsystemBase {
 
   private RelativeEncoder driveEncoder;
   private CANcoder angleEncoder;
-
-  // private CANcoderConfigurator angleEncoderConfigurator;
 
   private final SparkPIDController driveController;
 
@@ -74,7 +71,7 @@ public class SwerveModule extends SubsystemBase {
 
     desiredState.angle = angle;
 
-    error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
+    double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
     double constrainedError = MathUtility.constrainAngleDegrees(error);
     double rotorOutput = rotorPID.calculate(constrainedError);
     rotorOutput = MathUtility.clamp(rotorOutput, -1, 1);
@@ -93,9 +90,6 @@ public class SwerveModule extends SubsystemBase {
         FeedForward.calculate(desiredState.speedMetersPerSecond));
     }
   }
-
-  // private void configAngleEncoder() {
-  // } fuck this shit it's no use
 
   private void configAngleMotor() {
     angleMotor.restoreFactoryDefaults();

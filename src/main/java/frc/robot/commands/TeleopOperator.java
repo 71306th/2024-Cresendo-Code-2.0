@@ -61,18 +61,17 @@ public class TeleopOperator extends Command {
     if(operator.getPOV() == 180) Variables.OperatorControl.tilterOutput -= 0.01;
     if(operator.getPOV() == 270) Variables.OperatorControl.intakeOutput -= 0.01;
 
-    // if(m_SuperStructure.isLoaded()){
-    //   if(!oneTimeIsLoaded) {
-    //     rightRumbleTime = Timer.getFPGATimestamp() + Constants.JoystickConstants.rumbleTime; 
-    //     oneTimeIsLoaded = true;
-    //   }
-    //   if(rightRumbleTime >= Timer.getFPGATimestamp()) operator.setRumble(RumbleType.kRightRumble, 1);
-    //   else {
-    //     operator.setRumble(RumbleType.kBothRumble, 0); 
-    //     oneTimeIsLoaded = false;
-    //   }
-    // } else
-     if (Variables.OperatorControl.isInPlace) {
+    if(m_SuperStructure.isLoaded()){
+      if(!oneTimeIsLoaded) {
+        rightRumbleTime = Timer.getFPGATimestamp() + Constants.JoystickConstants.rumbleTime; 
+        oneTimeIsLoaded = true;
+      }
+      if(rightRumbleTime >= Timer.getFPGATimestamp()) operator.setRumble(RumbleType.kRightRumble, 1);
+      else {
+        operator.setRumble(RumbleType.kBothRumble, 0); 
+        oneTimeIsLoaded = false;
+      }
+    } else if (Variables.OperatorControl.isInPlace) {
       if(!oneTimeIsInPlace) {
         leftRumbleTime = Timer.getFPGATimestamp() + Constants.JoystickConstants.rumbleTime; 
         oneTimeIsInPlace = true;
