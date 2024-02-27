@@ -30,6 +30,10 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
     public static final double rumbleTime = 1;
   }
+  
+  public static final class Robot {
+    public static final String canbus = "GTX7130";
+  }
 
   public static final class Swerve {
     public static final double axisDeadBand = 0.05; // make sure ur robot won't vibrate cuz the joystick gives a input like 0.002 or sth
@@ -65,11 +69,8 @@ public final class Constants {
     public static final int driveContinuousCurrentLimit = 40; //80, limiting the amps so Neo won't brake
 
     /* Angle Motor PID Values */
-    public static final double angleKP = 0.0005;
-    public static final double angleKI = 0.0001;
-    public static final double angleKD = 0.00003;
-    public static final double angleKIWindUp = 5;
-    public static final double angleKILimit = 0.1;
+    public static final double angleKP = 0.01;
+    public static final double angleKD = 0;
 
     /* Drive Motor PID Values */
     public static final double driveKP = 0.12;

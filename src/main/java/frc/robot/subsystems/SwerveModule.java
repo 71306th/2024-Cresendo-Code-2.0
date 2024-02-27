@@ -27,6 +27,7 @@ import frc.robot.Constants;
 public class SwerveModule extends SubsystemBase {
 
   public int moduleNumber;
+  private double error;
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
   
@@ -49,7 +50,7 @@ public class SwerveModule extends SubsystemBase {
     angleOffset = moduleConstants.angleOffset;
 
     /* Angle Encoder Config */
-    angleEncoder = new CANcoder(moduleConstants.cancoderID, "GTX7130");
+    angleEncoder = new CANcoder(moduleConstants.cancoderID, Constants.Robot.canbus);
 
     /* Angle Motor Config */
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
@@ -73,7 +74,7 @@ public class SwerveModule extends SubsystemBase {
 
     desiredState.angle = angle;
 
-    double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
+    error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
     double constrainedError = MathUtility.constrainAngleDegrees(error);
     double rotorOutput = rotorPID.calculate(constrainedError);
     rotorOutput = MathUtility.clamp(rotorOutput, -1, 1);
@@ -102,7 +103,7 @@ public class SwerveModule extends SubsystemBase {
     angleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     angleMotor.setInverted(Constants.Swerve.angleInvert);
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
-    rotorPID = new PID(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD, Constants.Swerve.angleKIWindUp, Constants.Swerve.angleKILimit);
+    rotorPID = new PID(Constants.Swerve.angleKP, 0, Constants.Swerve.angleKD, 0, 0);
     angleMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
   }
   

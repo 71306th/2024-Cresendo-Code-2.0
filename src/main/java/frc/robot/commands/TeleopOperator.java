@@ -21,10 +21,8 @@ public class TeleopOperator extends Command {
 
   private final XboxController operator;
 
-  private boolean onePressTilterPlus = false;
-  private boolean onePressTilterMinus = false;
-  private boolean onePressIntakePlus = false;
-  private boolean onePressIntakeMinus = false;
+  private boolean lastIsManualTilter = false;
+  private boolean lastIsManualIntake = false;
   private boolean oneTimeIsInPlace = false;
   private boolean oneTimeIsLoaded = false;
 
@@ -45,39 +43,23 @@ public class TeleopOperator extends Command {
 
   @Override
   public void execute() {
-    if(operator.getAButton()) m_SuperStructure.setState(InputStates.Auto);
-    if(operator.getBButton()) m_SuperStructure.setState(InputStates.Base);
-    if(operator.getXButton()) m_SuperStructure.setState(InputStates.Podium);
-    if(operator.getYButton()) m_SuperStructure.setState(InputStates.Floor);
-    if(operator.getLeftBumper()) m_SuperStructure.setState(InputStates.Amp);
-    if(operator.getRightBumper()) m_SuperStructure.setState(InputStates.Idle);
-    if(operator.getBackButton()) m_SuperStructure.setState(InputStates.Emergency);
-    if(operator.getStartButtonPressed()) m_SuperStructure.setIntakeClaiming(Constants.SuperStructure.intakeClaimSpeed);
+    if(operator.getAButton()) m_SuperStructure.setState(InputStates.Auto); lastIsManualIntake = false; lastIsManualTilter = false;
+    if(operator.getBButton()) m_SuperStructure.setState(InputStates.Base); lastIsManualIntake = false; lastIsManualTilter = false;
+    if(operator.getXButton()) m_SuperStructure.setState(InputStates.Podium); lastIsManualIntake = false; lastIsManualTilter = false;
+    if(operator.getYButton()) m_SuperStructure.setState(InputStates.Floor); lastIsManualIntake = false; lastIsManualTilter = false;
+    if(operator.getLeftBumper()) m_SuperStructure.setState(InputStates.Amp); lastIsManualIntake = false; lastIsManualTilter = false;
+    if(operator.getRightBumper()) m_SuperStructure.setState(InputStates.Idle); lastIsManualIntake = false; lastIsManualTilter = false;
+    if(operator.getBackButton()) m_SuperStructure.setState(InputStates.Emergency); lastIsManualIntake = false; lastIsManualTilter = false;
+    if(operator.getStartButtonPressed()) m_SuperStructure.setIntakeClaiming(Constants.SuperStructure.intakeClaimSpeed); lastIsManualIntake = false; lastIsManualTilter = false;
     if(operator.getStartButtonReleased()) m_SuperStructure.setIntakeClaiming(0);
-    if(operator.getLeftStickButton()) m_SuperStructure.setState(InputStates.ManualTilterLock);
-    if(operator.getRightStickButton()) m_SuperStructure.setState(InputStates.ManualIntakeStop);
-    if(operator.getLeftTriggerAxis() >= 0.5) m_SuperStructure.setState(InputStates.ManualTilterRun);
-    if(operator.getRightTriggerAxis() >= 0.5) m_SuperStructure.setState(InputStates.ManualIntakeRun);
-    if(operator.getPOV() == 0 && onePressTilterPlus == false) {
-      Variables.OperatorControl.tilterOutput += 0.01;
-      onePressTilterPlus = true;
-    }
-    if(operator.getPOV() == 180 && onePressTilterMinus == false) {
-      Variables.OperatorControl.tilterOutput -= 0.01;
-      onePressTilterMinus = true;
-    }
-    if(operator.getPOV() != 0) onePressTilterMinus = false;
-    if(operator.getPOV() != 180) onePressTilterPlus = false;
-    if(operator.getPOV() == 90 && onePressIntakePlus == false) {
-      Variables.OperatorControl.intakeOutput += 0.01;
-      onePressIntakePlus = true;
-    }
-    if(operator.getPOV() == 270 && onePressIntakeMinus == false) {
-      Variables.OperatorControl.intakeOutput -= 0.01;
-      onePressIntakeMinus = true;
-    }
-    if(operator.getPOV() != 90) onePressIntakeMinus = false;
-    if(operator.getPOV() != 270) onePressIntakePlus = false;
+    if(operator.getLeftTriggerAxis() >= 0.5) m_SuperStructure.setState(InputStates.ManualTilterRun); lastIsManualTilter = true;
+    if(operator.getLeftTriggerAxis() < 0.5 && lastIsManualTilter) m_SuperStructure.setState(InputStates.ManualTilterLock);
+    if(operator.getRightTriggerAxis() >= 0.5) m_SuperStructure.setState(InputStates.ManualIntakeRun); lastIsManualIntake = true;
+    if(operator.getRightTriggerAxis() < 0.5 && lastIsManualIntake) m_SuperStructure.setState(InputStates.ManualIntakeStop);
+    if(operator.getPOV() == 0) Variables.OperatorControl.tilterOutput += 0.01;
+    if(operator.getPOV() == 90) Variables.OperatorControl.intakeOutput += 0.01;
+    if(operator.getPOV() == 180) Variables.OperatorControl.tilterOutput -= 0.01;
+    if(operator.getPOV() == 270) Variables.OperatorControl.intakeOutput -= 0.01;
 
     // if(m_SuperStructure.isLoaded()){
     //   if(!oneTimeIsLoaded) {

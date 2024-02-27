@@ -97,8 +97,8 @@ public class SuperStructure extends SubsystemBase {
   private boolean isPID = true;
 
   public SuperStructure() {
-    tilterMaster = new TalonFX(Constants.SuperStructure.tilterMaster, "GTX7130");
-    tilterSlave = new TalonFX(Constants.SuperStructure.tilterSlave, "GTX7130");
+    tilterMaster = new TalonFX(Constants.SuperStructure.tilterMaster, Constants.Robot.canbus);
+    tilterSlave = new TalonFX(Constants.SuperStructure.tilterSlave, Constants.Robot.canbus);
     
     intakeLowerMaster = new CANSparkMax(Constants.SuperStructure.intakeLowerMaster, MotorType.kBrushless);
     intakeLowerSlave = new CANSparkMax(Constants.SuperStructure.intakeLowerSlave, MotorType.kBrushless);
@@ -108,13 +108,14 @@ public class SuperStructure extends SubsystemBase {
     intakeLowerSlave.setIdleMode(IdleMode.kCoast);
     
     intakeLowerMaster.setInverted(Constants.SuperStructure.intakeLowerMasterInverted);
+    
     intakeLowerSlave.follow(intakeLowerMaster, Constants.SuperStructure.intakeLowerSlaveInverted);
     intakeUpper.setInverted(Constants.SuperStructure.intakeUpperInverted);
     
     tilterMaster.setInverted(Constants.SuperStructure.tilterMasterInverted);
     tilterSlave.setControl(new Follower(Constants.SuperStructure.tilterMaster, Constants.SuperStructure.tilterSlaveInverted));
     
-    tilterEncoder = new CANcoder(Constants.SuperStructure.tilterEncoder, "GTX7130");
+    tilterEncoder = new CANcoder(Constants.SuperStructure.tilterEncoder, Constants.Robot.canbus);
 
     tilterEncoderConfigurator = tilterEncoder.getConfigurator();
     tilterEncoderConfigurator.apply(CTREConfigs.CTREConfiguration());

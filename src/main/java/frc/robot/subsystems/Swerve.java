@@ -41,10 +41,10 @@ public class Swerve extends SubsystemBase {
   double[] visionYawValue = new double[10];
 
   public Swerve() {
-    gyro1 = new Pigeon2(Constants.Swerve.pigeon1, "GTX7130");
-    gyro2 = new Pigeon2(Constants.Swerve.pigeon2, "GTX7130");
-    gyro3 = new Pigeon2(Constants.Swerve.pigeon3, "GTX7130");
-    gyro4 = new Pigeon2(Constants.Swerve.pigeon4, "GTX7130");
+    gyro1 = new Pigeon2(Constants.Swerve.pigeon1, Constants.Robot.canbus);
+    gyro2 = new Pigeon2(Constants.Swerve.pigeon2, Constants.Robot.canbus);
+    gyro3 = new Pigeon2(Constants.Swerve.pigeon3, Constants.Robot.canbus);
+    gyro4 = new Pigeon2(Constants.Swerve.pigeon4, Constants.Robot.canbus);
     zeroGyro();
 
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), pos);

@@ -57,7 +57,7 @@ public class TeleopDriver extends Command {
       strafeVal =
           strafeLimiter.calculate(
               MathUtil.applyDeadband(driver.getLeftX() * Constants.Swerve.slowRegulator, Constants.Swerve.axisDeadBand));
-      if(Variables.VisionControl.hasTarget == true) {
+      if(Variables.VisionControl.hasTarget) {
           rotationVal = s_Swerve.calculateAutoFacing();
       } else {
           rotationVal =
@@ -71,7 +71,7 @@ public class TeleopDriver extends Command {
       strafeVal =
           strafeLimiter.calculate(
               MathUtil.applyDeadband(driver.getLeftX(), Constants.Swerve.axisDeadBand));
-      if(Variables.VisionControl.hasTarget == true){
+      if(Variables.VisionControl.hasTarget){
           rotationVal = s_Swerve.calculateAutoFacing();
       } else {
           rotationVal =
@@ -125,13 +125,13 @@ public class TeleopDriver extends Command {
       }
     } else driver.setRumble(RumbleType.kBothRumble, 0);
     // testing motors
-        if(driver.getPOV() == 0) s_Swerve.mSwerveMods[0].setDriveMotor(1);
-        if(driver.getPOV() == 45) s_Swerve.mSwerveMods[0].setAngleMotor(0.3);
-        if(driver.getPOV() == 90) s_Swerve.mSwerveMods[1].setDriveMotor(1);
-        if(driver.getPOV() == 135) s_Swerve.mSwerveMods[1].setAngleMotor(0.3);
-        if(driver.getPOV() == 180) s_Swerve.mSwerveMods[2].setDriveMotor(1);
-        if(driver.getPOV() == 225) s_Swerve.mSwerveMods[2].setAngleMotor(0.3);
-        if(driver.getPOV() == 270) s_Swerve.mSwerveMods[3].setDriveMotor(1);
-        if(driver.getPOV() == 315) s_Swerve.mSwerveMods[3].setAngleMotor(0.3);
+      if(driver.getPOV() == 0) s_Swerve.mSwerveMods[0].setDriveMotor(1);
+      if(driver.getPOV() == 45) s_Swerve.mSwerveMods[0].setAngleMotor(0.3);
+      if(driver.getPOV() == 90) s_Swerve.mSwerveMods[1].setDriveMotor(1);
+      if(driver.getPOV() == 135) s_Swerve.mSwerveMods[1].setAngleMotor(0.3);
+      if(driver.getPOV() == 180) s_Swerve.mSwerveMods[2].setDriveMotor(1);
+      if(driver.getPOV() == 225) s_Swerve.mSwerveMods[2].setAngleMotor(0.3);
+      if(driver.getPOV() == 270) s_Swerve.mSwerveMods[3].setDriveMotor(1);
+      if(driver.getPOV() == 315) s_Swerve.mSwerveMods[3].setAngleMotor(0.3);
   }
 }
