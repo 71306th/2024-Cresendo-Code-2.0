@@ -15,6 +15,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +26,7 @@ import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
 import frc.lib.config.CTREConfigs;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Variables;
 
 public class SuperStructure extends SubsystemBase {
@@ -36,9 +39,15 @@ public class SuperStructure extends SubsystemBase {
   
   private final CANcoder tilterEncoder;
   private final CANcoderConfigurator tilterEncoderConfigurator;
+
+  private AddressableLED m_ledleft;
+  private AddressableLED m_ledright;
+  private final AddressableLEDBuffer m_ledBuffer;
   
   // private final I2C.Port i2cPort;
   // private final ColorSensorV3 colorSenser;
+
+  private final Robot robot;
   
   private final DigitalInput limitSwitch;
   
@@ -103,6 +112,9 @@ public class SuperStructure extends SubsystemBase {
     intakeLowerMaster = new CANSparkMax(Constants.SuperStructure.intakeLowerMaster, MotorType.kBrushless);
     intakeLowerSlave = new CANSparkMax(Constants.SuperStructure.intakeLowerSlave, MotorType.kBrushless);
     intakeUpper = new TalonSRX(Constants.SuperStructure.intakeUpper);
+
+    robot = new Robot();
+    m_ledBuffer = robot.getLedBuffer();
 
     intakeLowerMaster.setIdleMode(IdleMode.kCoast);
     intakeLowerSlave.setIdleMode(IdleMode.kCoast);
@@ -397,5 +409,20 @@ public class SuperStructure extends SubsystemBase {
     // SmartDashboard.putNumber("B", detectedColor.blue);
     // SmartDashboard.putBoolean("Loaded", isLoaded());
     SmartDashboard.putBoolean("Semi-Auto In Place(only auto, base, podium, floor, amp)", Variables.OperatorControl.isInPlace);
+
+    if (
+      detectedColor.red > Constants.SuperStructure.noteColorInShade.red 
+      && detectedColor.blue > Constants.SuperStructure.noteColorInShade.blue
+      && detectedColor.green > Constants.SuperStructure.noteColorInShade.green 
+      && detectedColor.red < Constants.SuperStructure.noteColorNoShade.red
+      && detectedColor.blue < Constants.SuperStructure.noteColorNoShade.blue
+      && detectedColor.green < Constants.SuperStructure.noteColorNoShade.green
+      ) {
+      m_ledBuffer.setRGB(18, 255, 0, 0);
+      m_ledleft.setData(m_ledBuffer);
+      m_ledleft.start();
+      m_ledright.setData(m_ledBuffer);
+      m_ledright.start();
+    }
   }
 }
